@@ -11,8 +11,10 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ Scaffolded `Content/TVV` folder tree + 36 skeleton assets (subsystems, components, interfaces, PDA classes, function library, SaveGame, Developer Hub widget)
 - ➡ Graph logic in subsystem skeletons → M2/M3 (in-editor work)
 
-## M2 — Core Gameplay ☐
-- First-person character + Enhanced Input (move/look/crouch/sprint/interact/lean/lantern)
+## M2 — Core Gameplay ◐
+- ✅ Enhanced Input assets: IA_Move/Look/Sprint/Crouch/Interact/Lean/Lantern/Codex/Pause + IMC_Default (WASD, mouse, E/F/Q/R/Tab/Esc)
+- ✅ BP_TVVGameMode defaults: pawn=BP_PlayerCharacter, PC=BP_TVVPlayerController, HUD=BP_TVVHUD
+- ◐ First-person character graph logic (camera, movement bindings) — in-editor
 - `AC_Interaction` trace + prompt UI
 - `AC_Inventory` + `PDA_Item` + pickup/examine flow
 - New GameMode/GameInstance defaults; remove ThirdPerson/Variant_Combat template content
