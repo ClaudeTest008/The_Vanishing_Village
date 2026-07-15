@@ -14,7 +14,9 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 ## M2 — Core Gameplay ◐
 - ✅ Enhanced Input assets: IA_Move/Look/Sprint/Crouch/Interact/Lean/Lantern/Codex/Pause + IMC_Default (WASD, mouse, E/F/Q/R/Tab/Esc)
 - ✅ BP_TVVGameMode defaults: pawn=BP_PlayerCharacter, PC=BP_TVVPlayerController, HUD=BP_TVVHUD
-- ◐ First-person character graph logic (camera, movement bindings) — in-editor
+- ✅ PDA data schemas: 67 member variables across all 9 definition classes (`Content/Python/tvv_m2_pda_vars.py`); added missing PDA_LoopEvent, BPS_NarrativeSubsystem, AC_Health
+- ✅ Engine MCP server plugin enabled (ModelContextProtocol + MCPClientToolset, autostart on port 8000; `.mcp.json` wires Claude Code)
+- ◐ First-person character graph logic (camera, movement bindings) — scriptable headless via `unreal.BlueprintGraphEditor` (UE 5.8 Blueprint graph Python API)
 - `AC_Interaction` trace + prompt UI
 - `AC_Inventory` + `PDA_Item` + pickup/examine flow
 - New GameMode/GameInstance defaults; remove ThirdPerson/Variant_Combat template content
