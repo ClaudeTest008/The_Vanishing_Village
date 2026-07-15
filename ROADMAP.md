@@ -2,14 +2,14 @@
 
 Status legend: ☐ pending · ◐ in progress · ✅ done
 
-## M1 — Project Foundation ◐
+## M1 — Project Foundation ✅
 - ✅ Git repository, .gitignore, GitHub remote
 - ✅ Plugin enablement (StateTree, SmartObjects, CommonUI, MetaSound, Python/EditorScripting)
 - ✅ Gameplay tag tree (`Config/DefaultGameplayTags.ini`)
 - ✅ Architecture doc, asset audit doc
 - ✅ Editor scaffold script (`Content/Python/tvv_scaffold.py`)
-- ◐ Scaffolded `Content/TVV` folder tree + skeleton Blueprint assets (subsystems, components, interfaces, PDA classes, function library, Developer Hub widget)
-- ☐ Graph logic in subsystem skeletons (requires editor session)
+- ✅ Scaffolded `Content/TVV` folder tree + 36 skeleton assets (subsystems, components, interfaces, PDA classes, function library, SaveGame, Developer Hub widget)
+- ➡ Graph logic in subsystem skeletons → M2/M3 (in-editor work)
 
 ## M2 — Core Gameplay ☐
 - First-person character + Enhanced Input (move/look/crouch/sprint/interact/lean/lantern)
