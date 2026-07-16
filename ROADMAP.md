@@ -16,10 +16,12 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ BP_TVVGameMode defaults: pawn=BP_PlayerCharacter, PC=BP_TVVPlayerController, HUD=BP_TVVHUD
 - ✅ PDA data schemas: 67 member variables across all 9 definition classes (`Content/Python/tvv_m2_pda_vars.py`); added missing PDA_LoopEvent, BPS_NarrativeSubsystem, AC_Health
 - ✅ Engine MCP server plugin enabled (ModelContextProtocol + MCPClientToolset, autostart on port 8000; `.mcp.json` wires Claude Code)
-- ◐ First-person character graph logic (camera, movement bindings) — scriptable headless via `unreal.BlueprintGraphEditor` (UE 5.8 Blueprint graph Python API)
-- `AC_Interaction` trace + prompt UI
+- ✅ First-person character: camera, move/look/crouch/sprint (WalkSpeed/SprintSpeed vars 220/450), Enhanced Input wiring (`Content/Python/tvv_m2_player.py`)
+- ✅ Interaction system: `AC_Interactable` marker component (PromptText + OnInteracted event), `AC_Interaction` camera line trace → CurrentInteractable, `IA_Interact` → TryInteract (`Content/Python/tvv_m2_interaction.py`). BPI_Interactable kept as editor-time contract — interface message nodes not creatable headless.
+- ✅ Template content removed (ThirdPerson, Variant_Combat, Characters, LevelPrototyping, Input — 446 files); `Lvl_Sandbox` test map; defaults → Lvl_Sandbox + BP_TVVGameMode (`Content/Python/tvv_m2_cleanup.py`)
+- ◐ Prompt UI widget (needs UMG pass, with M7 UI work or earlier)
 - `AC_Inventory` + `PDA_Item` + pickup/examine flow
-- New GameMode/GameInstance defaults; remove ThirdPerson/Variant_Combat template content
+- PIE smoke test (needs interactive editor or automation test)
 
 ## M3 — Time Loop ☐
 - Loop clock, time segments, phase corruption
