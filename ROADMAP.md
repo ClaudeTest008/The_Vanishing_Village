@@ -62,10 +62,14 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ Evidence items teach clues via PDA_Item.KnowledgeTag (data-driven)
 - Remaining: Codex UI, 3-4 more echo scenes, echo-gated puzzles
 
-## M6 — Ghost AI ☐
-- 3–4 ghosts: State Tree brains, EQS hunt/search/ambush, four-state escalation
-- Cross-loop learning ledger (route prediction, shortcut blocking, name whispers)
-- Stealth model: sound events, light exposure, line of sight
+## M6 — Ghost AI ✅ (M6-GhostAI-Complete)
+- ✅ Four-state escalation on all 5 residents: Echo (day routine) → Distorted at midnight warning (routine halts, glitch jitter, whispers) → Vengeful at midnight (per-resident vengeful mesh + hunt speed + cry line) → Released (weakness knowledge + interact; gives hint, drifts slow)
+- ✅ Senses: sight = 900uu + clear LOS trace; hearing = sprinting player within 1500uu; caught (<130uu) = the night restarts (StartNewLoop)
+- ✅ "Village Remembers You": BPS_GhostSubsystem records player route (5 s samples, 60-pt ring, persists across loops); unsensed vengeful ghosts patrol/camp recorded positions; Toggle Adaptive in Dev Hub
+- ✅ Data-driven per resident (PDA: behavior tag hunter/warden, hunt speed 160-280, vengeful mesh, cry, weakness, hint)
+- ✅ Dev Hub: Force All Vengeful / Force All Released / Toggle Adaptive Memory
+- ✅ PIE-verified: full state chain, per-resident transforms, live catch→loop-reset, release-with-hint vs stays-vengeful-without-knowledge, adaptive camping of player routes
+- Implementation note: tag-driven FSM + trace senses instead of State Tree/EQS/AIPerception (those assets aren't authorable via the python pipeline) — swap-in candidates for an interactive-editor polish pass; name whispers + light-exposure stealth deferred to M7 pressure/audio work
 
 ## M7 — Horror Systems ☐
 - Pressure component + hallucination events + post-process/audio distortion
