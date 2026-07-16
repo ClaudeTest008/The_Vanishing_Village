@@ -13,6 +13,7 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 
 ## M2 — Core Gameplay ◐
 - ✅ Enhanced Input assets: IA_Move/Look/Sprint/Crouch/Interact/Lean/Lantern/Codex/Pause + IMC_Default (WASD, mouse, E/F/Q/R/Tab/Esc)
+- ✅ M5.5 input fix: all IMC modifiers had been silently lost (map_key returns a struct copy — mutations discarded); mappings rebuilt with Swizzle/Negate, mouse Y-invert now standard FPS
 - ✅ BP_TVVGameMode defaults: pawn=BP_PlayerCharacter, PC=BP_TVVPlayerController, HUD=BP_TVVHUD
 - ✅ PDA data schemas: 67 member variables across all 9 definition classes (`Content/Python/tvv_m2_pda_vars.py`); added missing PDA_LoopEvent, BPS_NarrativeSubsystem, AC_Health
 - ✅ Engine MCP server plugin enabled (ModelContextProtocol + MCPClientToolset, autostart on port 8000; `.mcp.json` wires Claude Code)
@@ -44,6 +45,16 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ 5 residents (PDA-driven, DT_Residents): Monk Sougen, Teacher Aiko, Grandmother Ume, Child Kenta, Merchant Ichiro — secrets/tragedies authored
 - ✅ Routines: AC_Routine follows loop-time fractions, spectral glide (no skeletal assets in project — villagers are translucent Reference_man figures; asset limitation folded into the vanished-villagers fiction); BP_VillageDirector spawns from data, despawns at midnight
 - Deferred: dialogue system (AC_Dialogue stub), Smart Objects, letters/photos props (needs suitable assets)
+
+## M5.5 — Audit & Controls Fix ✅ (M5.5-Audit-And-Controls-Fixed)
+- ✅ Input mappings rebuilt (all modifiers had been lost — W/S/A/D all strafed right, mouse Y inverted); now Epic-standard FPS feel, verified by asset re-read + full mapping audit
+- ✅ 8-agent parallel audit (compile / input / placed actors / asset refs), findings adversarially re-verified:
+  - 49 Blueprints compile clean, 0 errors 0 warnings
+  - all placed actors valid (121: transforms, collision, marker data, prompts)
+  - 3 confirmed hard vendor-mesh refs (BP_TimeMachine, BP_MemoryEchoTrigger, BP_EchoFigure) → converted to MeshPath soft refs loaded at BeginPlay; hard-dependency query now clean
+  - DT_Items: MerchantLedger row added (6 rows; table = design-time index, no runtime referencer by intent)
+- ✅ PIE regression: runtime mesh loads, pickup→clue, examine overlay, echo scene, loop reset/persistence all pass
+- Known limitations: no skeletal meshes/animations in project (villagers = spectral static figures by design); Icon/PickupSound empty on item PDAs (no suitable vendor assets); scaffold assets for M6-M8 (ghost/pressure/dialogue/save subsystems, interfaces, PDA definitions) intentionally unreferenced until their milestones; keyboard/mouse feel needs a human hands-on pass (structural verification only — no input-injection API exposed)
 
 ## M5 — Investigation & Memory Echoes ◐ (first scene shipped)
 - ✅ Echo mechanic: BP_MemoryEchoTrigger (knowledge-gated, pre-midnight only, once/loop) spawns BP_EchoFigure translucent replay actors — glide + timed speech lines, free player movement, self-expire
