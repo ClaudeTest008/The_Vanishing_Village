@@ -19,9 +19,14 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ First-person character: camera, move/look/crouch/sprint (WalkSpeed/SprintSpeed vars 220/450), Enhanced Input wiring (`Content/Python/tvv_m2_player.py`)
 - ✅ Interaction system: `AC_Interactable` marker component (PromptText + OnInteracted event), `AC_Interaction` camera line trace → CurrentInteractable, `IA_Interact` → TryInteract (`Content/Python/tvv_m2_interaction.py`). BPI_Interactable kept as editor-time contract — interface message nodes not creatable headless.
 - ✅ Template content removed (ThirdPerson, Variant_Combat, Characters, LevelPrototyping, Input — 446 files); `Lvl_Sandbox` test map; defaults → Lvl_Sandbox + BP_TVVGameMode (`Content/Python/tvv_m2_cleanup.py`)
-- ◐ Prompt UI widget (needs UMG pass, with M7 UI work or earlier)
-- `AC_Inventory` + `PDA_Item` + pickup/examine flow
-- PIE smoke test (needs interactive editor or automation test)
+- ✅ Inventory system (M3-Inventory-Complete): PDA_Item extended (Weight/ExamineText/bIsExaminable/PickupSound), FInventoryEntry + FItemTableRow structs, 5 item PDAs from vendor meshes, DT_Items
+- ✅ AC_Inventory: stacking AddItem/RemoveItem, HasItem/GetItemCount/GetInventoryContents, UseItem/ExamineItem + OnInventoryChanged/OnItemUsed/OnItemExamined dispatchers (MaxStack clamp deferred)
+- ✅ AC_InventoryItemMarker + BP_Pickup_Base (prompt derived from item data at BeginPlay); 5 pickups in Lvl_Sandbox
+- ✅ Player: AC_Inventory component, IA_Examine (X) -> AC_Interaction.ExamineCurrent
+- ✅ UI: WBP_InteractionPrompt (OnInteractableChanged) + WBP_ExamineOverlay (OnItemExamined, 5 s auto-hide); HUD spawns both. CommonUI deferred (no style assets)
+- ✅ Developer Hub: Add Test Herb / Dump Inventory (PIE)
+- ✅ PIE smoke test via VibeUE (stacking, pickup e2e, prompt + examine verified live)
+- Icons + pickup SFX pending suitable assets; MaxStack clamp with PDA-load strategy
 
 ## M3 — Time Loop ☐
 - Loop clock, time segments, phase corruption
