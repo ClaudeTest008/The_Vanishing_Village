@@ -39,15 +39,17 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ PIE-verified: 3 loops — persistence vs reset, machine activation, auto-midnight, lighting states
 - Deferred: disk SaveGame (SG_TVVSave) for cross-session persistence; smooth lighting lerps (Timeline) with M7 polish; BPI_LoopReset propagation to world actors (needed once village NPCs/props exist, M4-World)
 
-## M4 — World & Narrative ☐
-- `L_Village` World Partition map: Shrine, Marketplace, School, River, paths
-- 4–5 residents: PDA definitions, routines (Smart Objects), dialogue
-- Environmental storytelling pass (letters, photos, altars)
+## M4 — World & Narrative ✅ (M5-VillageAndEcho-Complete)
+- ✅ District in Lvl_Sandbox: shrine (fence ring, offering table, time machine), marketplace (stalls/crates/tables), school cabin + porch (doll on rocking chair), 3 houses (abandoned-dinner tableau, woodcutting site, boat/outhouse), perimeter pines, street fences — 104 actors, all vendor meshes
+- ✅ 5 residents (PDA-driven, DT_Residents): Monk Sougen, Teacher Aiko, Grandmother Ume, Child Kenta, Merchant Ichiro — secrets/tragedies authored
+- ✅ Routines: AC_Routine follows loop-time fractions, spectral glide (no skeletal assets in project — villagers are translucent Reference_man figures; asset limitation folded into the vanished-villagers fiction); BP_VillageDirector spawns from data, despawns at midnight
+- Deferred: dialogue system (AC_Dialogue stub), Smart Objects, letters/photos props (needs suitable assets)
 
-## M5 — Investigation & Memory Echoes ☐
-- Evidence gathering → Codex UI
-- Echo reconstruction: translucent interactive replay volume, 30–60 s, free player movement
-- Echo-gated puzzles (4–5, interconnected)
+## M5 — Investigation & Memory Echoes ◐ (first scene shipped)
+- ✅ Echo mechanic: BP_MemoryEchoTrigger (knowledge-gated, pre-midnight only, once/loop) spawns BP_EchoFigure translucent replay actors — glide + timed speech lines, free player movement, self-expire
+- ✅ Marketplace quarrel scene: ledger evidence pickup unlocks clue tag -> echo replays Ichiro/Aiko argument -> unlocks Knowledge.Resident.MerchantDebt
+- ✅ Evidence items teach clues via PDA_Item.KnowledgeTag (data-driven)
+- Remaining: Codex UI, 3-4 more echo scenes, echo-gated puzzles
 
 ## M6 — Ghost AI ☐
 - 3–4 ghosts: State Tree brains, EQS hunt/search/ambush, four-state escalation
