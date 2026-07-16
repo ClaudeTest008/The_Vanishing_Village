@@ -28,11 +28,16 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ PIE smoke test via VibeUE (stacking, pickup e2e, prompt + examine verified live)
 - Icons + pickup SFX pending suitable assets; MaxStack clamp with PDA-load strategy
 
-## M3 — Time Loop ☐
-- Loop clock, time segments, phase corruption
-- Time Loom actor in shrine + reset sequence
-- `BPI_LoopReset`/`BPI_TimeAware` propagation; persistent vs reset state via WorldStateSubsystem
-- Save system v1 (codex, loop stats)
+## M3 — Time Loop ✅ (M4-TimeLoop-Complete)
+- ✅ BPS_TimeLoopSubsystem: loop clock (AdvanceTime via GameMode tick), LoopDuration 1800 s, midnight warning at 120 s, idempotent TriggerMidnight; dispatchers OnLoopStarted/OnMidnightApproaching/OnMidnightTriggered/OnLoopReset/OnKnowledgeUnlocked
+- ✅ Knowledge persistence: KnowledgeCodex (GameplayTagContainer) + WorldState (Map<Tag,bool>) live on GameInstance-owned manager — survive loops; UnlockKnowledge/HasKnowledge/Set+GetWorldStateFlag
+- ✅ BP_TimeMachine (shrine monolith, two-stage confirm interact) in Lvl_Sandbox
+- ✅ Loop reset: AC_Inventory.ResetForLoop keeps bPersistentThroughLoops items (Ritual Bowl), player respawns at PlayerStart
+- ✅ WBP_LoopTimer HUD countdown / AFTER MIDNIGHT state
+- ✅ Day/night: GameMode ApplyTimeOfDay — dusk on warning, near-black + dense fog at midnight, morning restore on loop start; World.AfterMidnight tag flag = ghost-shift trigger (consumed in M6)
+- ✅ Developer Hub: StartNewLoop / JumpToMidnight / SetLoopTime60 / UnlockKnowledge
+- ✅ PIE-verified: 3 loops — persistence vs reset, machine activation, auto-midnight, lighting states
+- Deferred: disk SaveGame (SG_TVVSave) for cross-session persistence; smooth lighting lerps (Timeline) with M7 polish; BPI_LoopReset propagation to world actors (needed once village NPCs/props exist, M4-World)
 
 ## M4 — World & Narrative ☐
 - `L_Village` World Partition map: Shrine, Marketplace, School, River, paths
