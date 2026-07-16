@@ -2,6 +2,20 @@
 
 Status legend: ☐ pending · ◐ in progress · ✅ done
 
+## Vision update (2026-07-16): "Inunaki Veil — Mirror of the Forgotten Son"
+Setting is now Inunaki Village; protagonist Hiroshi; the **Mirror of Passing** flips between Past (ritual day, living village) and Present (cursed ruins). The existing loop machinery maps directly: Echo-villager day == Past, vengeful-yōkai night == Present; `bIsAfterMidnight` doubles as the era flag so every era-reactive system reuses midnight plumbing. The externally-numbered "M7: Mirror of Passing" milestone is tagged `M8-MirrorOfPassing-Complete` here (M7 tag was already taken by the horror-polish pass). Sensitive themes (suicide, cult trauma) are handled through the "village won't let him die" curse framing — death redirects into the Past, toward memory and redemption, never depicted as goal.
+
+## M8 — Mirror of Passing & Time Flip ✅ (M8-MirrorOfPassing-Complete)
+- ✅ FlipEra()/FlipToEra(bool) on the time subsystem: CurrentEra tag, WorldState World.Past/World.Present flags, OnEraFlipped dispatcher, bIsAfterMidnight alias
+- ✅ Mirror of Passing: persistent inventory item (shrine pickup), AC_Mirror UseMirror (item-gated, 5 s cooldown), M key
+- ✅ Veil Erosion: 1.5/s while in Past; at 100 the Veil tears — forced flip to Present, erosion resets (verified 40 s → exactly 60; 70 s → forced flip)
+- ✅ Auto-flip on near-death: vengeful catch throws Hiroshi into the Past (+25 pressure) instead of restarting the night
+- ✅ Era world state: villagers Echo↔Vengeful, era-tagged props (PastOnly market life / PresentOnly overgrowth+debris), lighting interpolates warm-morning↔ruin-twilight, ambience beds swap — all PIE-verified both directions
+- ✅ Object persistence across flips: inventory + world pickups exist in both eras by design
+- ✅ Fixed: missing OnEraFlipped broadcast exec link; era binds wired to tick-chain GetTimeLoop (null at BeginPlay); AC_Interaction trace-miss AccessNone spam (1600+/min since M3) — guarded, 0 in verified run
+- Emergent kept: ghosts camping recorded routes + catch-flip = involuntary era thrashing when cornered — reads as the curse fighting back
+- Next milestones (external numbering): M8-Expanded village/yōkai skins → M9 pressure polish (largely shipped already) → M10 memory subplots/endings → M11 shipping prep
+
 ## M1 — Project Foundation ✅
 - ✅ Git repository, .gitignore, GitHub remote
 - ✅ Plugin enablement (StateTree, SmartObjects, CommonUI, MetaSound, Python/EditorScripting)
