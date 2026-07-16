@@ -71,10 +71,14 @@ Status legend: ☐ pending · ◐ in progress · ✅ done
 - ✅ PIE-verified: full state chain, per-resident transforms, live catch→loop-reset, release-with-hint vs stays-vengeful-without-knowledge, adaptive camping of player routes
 - Implementation note: tag-driven FSM + trace senses instead of State Tree/EQS/AIPerception (those assets aren't authorable via the python pipeline) — swap-in candidates for an interactive-editor polish pass; name whispers + light-exposure stealth deferred to M7 pressure/audio work
 
-## M7 — Horror Systems ☐
-- Pressure component + hallucination events + post-process/audio distortion
-- Dynamic lighting/audio corruption toward midnight
-- Charms/seals resource loop
+## M7 — Horror Systems ✅ (M7-HorrorPolish-Complete)
+- ✅ AC_Pressure (player): 0-100, thresholds 30/60/80 (CDO-tunable); sources: after-midnight +2/s, dusk +0.5/s, vengeful proximity up to +4/s; relief: shrine radius -6/s, knowledge unlock -10, baseline decay
+- ✅ Effects: camera breathing (sin pitch, scales 30→100), post-process distortion blend (vignette/grain/chromatic fringe/desaturation, 20→100), fake-ghost apparitions (10 s cadence at 60+), prop nudges at 80+, HUD clock blood-red tint + scrambled time ("??:33") at 80+
+- ✅ Adaptive layered ambience from existing WAVs: day fades with pressure; deja_vu under midnight; echoes 30+ / whisper monologue 60+ / simulation drone 80+ (volume-crossfaded AudioComponents)
+- ✅ Smooth lighting: morning/dusk/midnight presets now interpolate (FInterpTo/CInterpTo) — no pops
+- ✅ Dev Hub: Set Pressure 90/0, Trigger Hallucination
+- ✅ PIE-verified end-to-end incl. emergent scare: vengeful ghosts camping the player's recorded position ring at ~300uu and red-line pressure; shrine is an uneasy sanctuary after midnight (-6/s barely beats sources) — kept as design
+- Deferred: MetaSound assets + Niagara particles (no such assets in project; not authorable via python pipeline), charm/seal resource loop (M8 with endings economy), camera-shake asset (breathing via pitch osc)
 
 ## M8 — Divergence & Endings ☐
 - 3 timeline divergences, resident fate changes, 2–3 endings
