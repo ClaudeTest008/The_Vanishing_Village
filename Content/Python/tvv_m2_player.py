@@ -15,12 +15,15 @@ import unreal
 BP_PATH = "/Game/TVV/Blueprints/Player/BP_PlayerCharacter"
 IMC_PATH = "/Game/TVV/Input/IMC_Default"
 IA_DIR = "/Game/TVV/Input"
+AC_INTERACTION = "/Game/TVV/Blueprints/Components/AC_Interaction"
+WALK_SPEED = "220.0"
+SPRINT_SPEED = "450.0"
 
 bel = unreal.BlueprintEditorLibrary
 bge = unreal.BlueprintGraphEditor
 gp = unreal.BlueprintGraphPin  # ScriptMethod statics also available on instances
 
-log, err = unreal.log, unreal.log_error
+log, err = unreal.log_warning, unreal.log_error  # log_warning: plain log invisible in -run=pythonscript output
 results = {"ok": [], "fail": []}
 
 
@@ -81,7 +84,7 @@ else:
     except Exception as e:
         fail(f"camera: {e}")
 
-# ---------- crouch capability on CharacterMovement template ----------
+# ---------- crouch capability + walk speeds on CharacterMovement template ----------
 try:
     if "CharacterMovement" in existing:
         data = sds.k2_find_subobject_data_from_handle(existing["CharacterMovement"])
@@ -89,9 +92,39 @@ try:
         props = cm.get_editor_property("nav_agent_props")
         props.set_editor_property("can_crouch", True)
         cm.set_editor_property("nav_agent_props", props)
-        ok("can_crouch enabled")
+        cm.set_editor_property("max_walk_speed", float(WALK_SPEED))
+        cm.set_editor_property("max_walk_speed_crouched", 110.0)
+        ok("can_crouch + walk speeds set")
 except Exception as e:
     fail(f"can_crouch: {e}")
+
+# ---------- AC_Interaction component ----------
+if "AC_Interaction" in existing:
+    ok("AC_Interaction exists (skipped)")
+else:
+    try:
+        ac_class = unreal.load_object(None, f"{AC_INTERACTION}.AC_Interaction_C")
+        params = unreal.AddNewSubobjectParams(
+            parent_handle=handles[0],
+            new_class=ac_class,
+            blueprint_context=bp)
+        new_handle, fail_reason = sds.add_new_subobject(params)
+        if not fail_reason.is_empty():
+            fail(f"add AC_Interaction: {fail_reason}")
+        else:
+            sds.rename_subobject(new_handle, unreal.Text("AC_Interaction"))
+            ok("AC_Interaction added")
+    except Exception as e:
+        fail(f"AC_Interaction: {e}")
+
+# ---------- speed member variables (float literals rejected by SetPinValue; CDO defaults below) ----------
+real_type = bel.get_basic_type_by_name("real")
+for vname in ("WalkSpeed", "SprintSpeed"):
+    if vname not in [str(v) for v in bel.list_member_variable_names(bp)]:
+        if bel.add_member_variable(bp, vname, real_type):
+            ok(f"var {vname} added")
+        else:
+            fail(f"var {vname}")
 
 # ---------- event graph ----------
 editor = bge.get_graph_editor_by_name(bp, "EventGraph")
@@ -195,11 +228,49 @@ if True:
         connect(bel.find_output_pin(ev_crouch, "Completed"), bel.find_execute_pin(n_uncrouch), "Crouch.Completed")
         ok("IA_Crouch wired")
 
+    # --- IA_Sprint (hold: MaxWalkSpeed sprint <-> walk) ---
+    ev_sprint = create("Input|EnhancedActionEvents|IA_Sprint", X, Y + 2100)
+    n_cm1 = editor.add_get_member_variable_node("CharacterMovement", "/Script/Engine.Character")
+    n_cm2 = editor.add_get_member_variable_node("CharacterMovement", "/Script/Engine.Character")
+    n_fast = editor.add_set_member_variable_node("MaxWalkSpeed", "/Script/Engine.CharacterMovementComponent")
+    n_slow = editor.add_set_member_variable_node("MaxWalkSpeed", "/Script/Engine.CharacterMovementComponent")
+    n_vfast = editor.add_get_member_variable_node("SprintSpeed")
+    n_vslow = editor.add_get_member_variable_node("WalkSpeed")
+    if all((ev_sprint, n_cm1, n_cm2, n_fast, n_slow, n_vfast, n_vslow)):
+        dump_pins(n_fast, "SetMaxWalkSpeed")
+        dump_pins(n_cm1, "GetCharacterMovement")
+        connect(bel.find_output_pin(ev_sprint, "Started"), bel.find_execute_pin(n_fast), "Sprint.Started->Fast")
+        connect(bel.find_output_pin(ev_sprint, "Completed"), bel.find_execute_pin(n_slow), "Sprint.Completed->Slow")
+        connect(bel.find_output_pin(n_cm1, "CharacterMovement"), bel.find_self_pin(n_fast), "CM->Fast.self")
+        connect(bel.find_output_pin(n_cm2, "CharacterMovement"), bel.find_self_pin(n_slow), "CM->Slow.self")
+        connect(bel.find_output_pin(n_vfast, "SprintSpeed"), bel.find_input_pin(n_fast, "MaxWalkSpeed"), "SprintSpeed->Fast")
+        connect(bel.find_output_pin(n_vslow, "WalkSpeed"), bel.find_input_pin(n_slow, "MaxWalkSpeed"), "WalkSpeed->Slow")
+        ok("IA_Sprint wired")
+
+    # --- IA_Interact -> AC_Interaction.TryInteract ---
+    ev_int = create("Input|EnhancedActionEvents|IA_Interact", X, Y + 2500)
+    n_ac = editor.add_get_member_variable_node("AC_Interaction")
+    n_try = editor.add_call_function_node(f"{AC_INTERACTION}.AC_Interaction_C.TryInteract")
+    if not n_try:
+        n_try = create("TryInteract", X + 400, Y + 2500)
+    if all((ev_int, n_ac, n_try)):
+        dump_pins(n_try, "TryInteract")
+        connect(bel.find_output_pin(ev_int, "Started"), bel.find_execute_pin(n_try), "Interact.Started->Try")
+        connect(bel.find_output_pin(n_ac, "AC_Interaction"), bel.find_self_pin(n_try), "AC->Try.self")
+        ok("IA_Interact wired")
+
 # ---------- compile & save ----------
 if not bel.compile_blueprint(bp):
     fail("compile_blueprint")
 else:
     ok("compiled")
+    try:
+        cdo = unreal.get_default_object(unreal.load_object(None, f"{BP_PATH}.BP_PlayerCharacter_C"))
+        cdo.set_editor_property("WalkSpeed", float(WALK_SPEED))
+        cdo.set_editor_property("SprintSpeed", float(SPRINT_SPEED))
+        ok("speed CDO defaults set")
+    except Exception as e:
+        fail(f"speed CDO: {e}")
     unreal.EditorAssetLibrary.save_asset(BP_PATH, only_if_is_dirty=False)
     ok("saved")
 
