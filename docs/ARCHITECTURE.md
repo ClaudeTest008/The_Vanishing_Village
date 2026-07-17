@@ -34,6 +34,9 @@ This preserves the subsystem architecture (single instance, game-instance lifeti
 | `AC_Routine` | Resident echo pawns | Executes `PDA_Routine` schedule entries against loop clock. |
 | `AC_Dialogue` | Residents/ghosts | Runs `PDA_Dialogue` trees, gated by knowledge/trust tags. |
 
+## Player & Combat (M9)
+`BP_PlayerCharacter` is reparented onto the engine combat template's `BP_CombatCharacter_C` (`Content/Variant_Combat/`): it inherits the mannequin mesh + `ABP_Manny_Combat`, third-person shoulder camera (spring arm w/ lag), montage-driven combo/charged attacks and the HP/`BPI_Damageable` pipeline. TVV layers on top: stamina/focus/dodge (SHf-style), weapon equip + per-swing durability from `PDA_Item` weapon fields (`bIsWeapon/WeaponDamage/MaxDurability`, damage cached in a float to avoid None derefs), and a `Handle Death` override that flips era to Past (+pressure) instead of destroy/respawn. Enemies: `BP_Villager_Base` implements `BPI_Damageable` and forwards to `AC_Ghost.TakeHit` (HP, stagger, `Die` = Niagara burst + pressure relief); `AC_Ghost` tick states gained windup→strike attacks (dodge-aware — a dodging player gets `OnPerfectDodge` instead of damage), era-tuned damage/cooldown (Vengeful vs Distorted).
+
 ## Blueprint Interfaces (`Content/TVV/Blueprints/Interfaces/`)
 `BPI_Interactable` (GetInteractionType/CanInteract/Interact/GetPrompt), `BPI_TimeAware` (OnTimeSegmentChanged/OnPhaseChanged), `BPI_Saveable` (CaptureState/RestoreState), `BPI_GhostReaction` (OnGhostNear/OnGhostStateChanged), `BPI_MemoryProvider` (GetMemoryId/GetEvidenceTags), `BPI_LoopReset` (OnLoopWillReset/OnLoopStarted).
 
